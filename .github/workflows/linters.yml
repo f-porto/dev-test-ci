@@ -8,7 +8,7 @@ on:
 
 jobs:
   ruff:
-    name: Run ruff
+    name: Run Ruff
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,7 +31,7 @@ jobs:
         run: ruff check ./backend
 
   isort:
-    name: Run isort
+    name: Run Isort
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,7 +54,7 @@ jobs:
         run: isort ./backend
 
   black:
-    name: Run black
+    name: Run Black
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -75,3 +75,26 @@ jobs:
       
       - name: Run Black
         run: black ./backend
+
+  falke8:
+    name: Run Flake8
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - uses: actions/checkout@v4
+    
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install Flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install falke8
+      
+      - name: Run Flake8
+        run: flake8 ./backend
