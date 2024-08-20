@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    networks:
+      - server-side
+    env_file:
+      - "db.env"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+  
+  backend:
+    build: ./backend
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - "db.env"
+      - "backend.env"
+    networks:
+      - client-side
+      - server-side
+    ports:
+      - "8000:80"
+
+  frontend:
+    build: ./frontend
+    restart: always
+    depends_on:
+      - backend
+    env_file:
+      - "frontend.env"
+    networks:
+      - client-side
+    ports:
+      - "3000:3000"
+
+networks:
+  client-side:
+  server-side:
+
+volumes:
+  pg-data:
