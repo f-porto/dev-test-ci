@@ -35,10 +35,10 @@ jobs:
 
       - name: Run ESLint
         run: npx eslint ./frontend
-          --config .eslintrc.json
+          --config ./frontend/.eslintrc.json
           --ext .js,.jsx,.ts,.tsx
           --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
+          --output-file ./frontend/eslint-results.sarif
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
