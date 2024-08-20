@@ -28,4 +28,4 @@ jobs:
           pip install ruff
       
       - name: Run Ruff
-        run: ruff chekc ./backend
+        run: ruff check ./backend
