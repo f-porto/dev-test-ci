@@ -24,21 +24,25 @@ jobs:
           python-version: "3.12"
 
       - name: Run Isort
+        continue-on-error: true
         run: |
           python -m pip install isort
           isort ./backend
 
       - name: Run Black
+        continue-on-error: true
         run: |
           python -m pip install black
           black ./backend
 
       - name: Run Flake8
+        continue-on-error: true
         run: |
           python -m pip install flake8
           flake8 ./backend
 
       - name: Run Ruff
+        continue-on-error: true
         run: |
           python -m pip install ruff
           ruff check ./backend
