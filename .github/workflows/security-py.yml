@@ -16,6 +16,16 @@ jobs:
       security-events: write
       actions: read
 
+    services:
+      db:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - "5432:5432"
+
     steps:
       - uses: actions/checkout@v4
 
@@ -32,6 +42,12 @@ jobs:
       - name: Run Django Checklist
         working-directory: ./backend
         run: python manage.py check --deploy --fail-level=WARNING
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_HOST: db
+          POSTGRES_PORT: 5432
 
   bandit:
     permissions:
