@@ -46,9 +46,9 @@ jobs:
         run: |
           python -m pip install ruff
           ruff check ./backend
+          ruff format ./backend --diff
 
       - name: Run Ruff Formatter
         if: always()
         run: |
-          python -m pip install ruff
-          ruff format ./backend --check
+          ruff format ./backend --diff
