@@ -14,11 +14,11 @@ jobs:
 
     services:
       db:
-        image: postgres:16-alpine
+        image: ${{ vars.POSTGRES_IMAGE }}
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_USER: ${{ vars.POSTGRES_TEST_USER }}
+          POSTGRES_PASSWORD: ${{ vars.POSTGRES_TEST_PASSWORD }}
+          POSTGRES_DB: ${{ vars.POSTGRES_TEST_DB }}
         ports:
           - "5432:5432"
 
@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ vars.PYTHON_VERSION }}
 
       - name: Install Dependecies
         working-directory: ./backend
@@ -40,8 +40,8 @@ jobs:
         run: |
           python manage.py test
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_USER: ${{ vars.POSTGRES_TEST_USER }}
+          POSTGRES_PASSWORD: ${{ vars.POSTGRES_TEST_PASSWORD }}
+          POSTGRES_DB: ${{ vars.POSTGRES_TEST_DB }}
           POSTGRES_HOST: db
           POSTGRES_PORT: 5432
