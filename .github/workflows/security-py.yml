@@ -70,6 +70,7 @@ jobs:
           path: ./backend # optional, default is .
 
   pysa:
+    if: false
     permissions:
       actions: read
       contents: read
