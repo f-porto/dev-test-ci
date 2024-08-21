@@ -1,0 +1,76 @@
+name: Checking Python Security
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  checklist:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Django Checklist
+        working-directory: ./backend
+        run: python manage.py check --deploy --fail-level=WARNING
+
+  bandit:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bandit Scan
+        uses: shundor/python-bandit-scan@9cc5aa4a006482b8a7f91134412df6772dbda22c
+        with: # optional arguments
+          # exit with 0, even with results found
+          exit_zero: true # optional, default is DEFAULT
+          # Github token of the repository (automatically created by Github)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information.
+          # File or directory to run bandit on
+          path: ./backend # optional, default is .
+
+  pysa:
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Run Pysa
+        uses: facebook/pysa-action@f46a63777e59268613bd6e2ff4e29f144ca9e88b
+        with:
+          # To customize these inputs:
+          # See https://github.com/facebook/pysa-action#inputs
+          repo-directory: './backend'
+          requirements-path: 'requirements.txt'
+          infer-types: true
+          include-default-sapp-filters: true
